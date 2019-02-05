@@ -1,0 +1,83 @@
+{
+	"flow_name" : "knowledge-flow-streaming",
+	"steps" : [
+		{
+			"class" : "weka.knowledgeflow.steps.ClassAssigner",
+			"properties" : {
+				"classColumn" : "/last",
+				"name" : "ClassAssigner2"
+			},
+			"connections" : {
+				"instance" : [
+					"NaiveBayesUpdateable"
+				]
+			},
+			"coordinates" : "228,83"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Loader",
+			"properties" : {
+				"loader" : {
+					"type" : "loader",
+					"class" : "weka.core.converters.ArffLoader",
+					"filePath" : "/home/frankl1/weka-3-8-3/data/segment-challenge.arff",
+					"useRelativePath" : false
+				},
+				"name" : "ArffLoader2"
+			},
+			"connections" : {
+				"instance" : [
+					"ClassAssigner2"
+				]
+			},
+			"coordinates" : "69,81"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Classifier",
+			"properties" : {
+				"classifier" : {
+					"type" : "optionHandler",
+					"class" : "weka.classifiers.bayes.NaiveBayesUpdateable",
+					"options" : ""
+				},
+				"loadClassifierFileName" : "",
+				"name" : "NaiveBayesUpdateable",
+				"resetIncrementalClassifier" : false,
+				"updateIncrementalClassifier" : true
+			},
+			"connections" : {
+				"incrementalClassifier" : [
+					"IncrementalClassifierEvaluator"
+				]
+			},
+			"coordinates" : "388,85"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.IncrementalClassifierEvaluator",
+			"properties" : {
+				"chartingEvalWindowSize" : 0,
+				"name" : "IncrementalClassifierEvaluator",
+				"outputPerClassInfoRetrievalStats" : false,
+				"statusFrequency" : 2000
+			},
+			"connections" : {
+				"chart" : [
+					"StripChart"
+				]
+			},
+			"coordinates" : "600,84"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.StripChart",
+			"properties" : {
+				"XLabelFreq" : 500,
+				"name" : "StripChart",
+				"refreshFreq" : 5,
+				"refreshWidth" : 1
+			},
+			"connections" : {
+			},
+			"coordinates" : "788,84"
+		}
+	]
+}
